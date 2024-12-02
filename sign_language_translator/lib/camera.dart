@@ -79,38 +79,36 @@ class _CameraState extends State<Camera> {
                       alignment: Alignment.topRight,
                       child: Padding(
                         padding: const EdgeInsets.only(right: 5, top: 10),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  isRearCamera = !isRearCamera;
-                                });
-                                isRearCamera ? startCamera(0) : startCamera(1);
-                              },
-                              child: Container(
-                                decoration: const BoxDecoration(
-                                  color: Color.fromARGB(50, 0, 0, 0),
-                                  shape: BoxShape.circle,
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(10),
-                                  child: isRearCamera
-                                      ? const Icon(
-                                          Icons.camera_front,
-                                          color: Colors.white,
-                                          size: 30,
-                                        )
-                                      : const Icon(
-                                          Icons.camera_rear,
-                                          color: Colors.white,
-                                          size: 30,
-                                        ),
-                                ),
+                        child: Container(
+                          alignment: Alignment.topRight,
+                          child: GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                isRearCamera = !isRearCamera;
+                              });
+                              isRearCamera ? startCamera(0) : startCamera(1);
+                            },
+                            child: Container(
+                              decoration: const BoxDecoration(
+                                color: Color.fromARGB(50, 0, 0, 0),
+                                shape: BoxShape.circle,
                               ),
-                            )
-                          ],
+                              child: Padding(
+                                padding: const EdgeInsets.all(10),
+                                child: isRearCamera
+                                    ? const Icon(
+                                        Icons.camera_front,
+                                        color: Colors.white,
+                                        size: 30,
+                                      )
+                                    : const Icon(
+                                        Icons.camera_rear,
+                                        color: Colors.white,
+                                        size: 30,
+                                      ),
+                              ),
+                            ),
+                          ),
                         ),
                       ),
                     ),

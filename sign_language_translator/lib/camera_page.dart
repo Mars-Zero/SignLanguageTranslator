@@ -20,19 +20,28 @@ class CameraPage extends StatelessWidget {
       ),
       body: Center(
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            // const SizedBox(height: 20),
+            const SizedBox(height: 2),
             Container(
               constraints: BoxConstraints(
-                maxHeight: 500,
+                maxHeight: 400,
               ),
               child: Camera(),
             ),
-            // const SizedBox(height: 20),
-            // ElevatedButton(
-            //   onPressed: () {},
-            //   child: const Text('Start Translation'),
-            // ),
+            const SizedBox(height: 110),
+            ElevatedButton(
+              onPressed: () {},
+              child: const Text('Start Translation'),
+            ),
+            Text(
+              'Sign Language Translator',
+              style: TextStyle(
+                color: Colors.deepPurple,
+                fontSize: 20,
+              ),
+            ),
+            SizedBox(height: 20),
           ],
         ),
       ),
