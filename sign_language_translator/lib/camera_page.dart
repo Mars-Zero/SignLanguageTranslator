@@ -68,15 +68,14 @@ class CameraPage extends StatelessWidget {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Instrucțiuni de folosire'),
-          content: const Text(
-            'Urmati pasii urmatori:\n'
-            '1. Utilizati camera pentru a captura semnele.\n'
-            '2. Exectutati semnele cat mai clar si lasati sa treaca macar o secunda intre doua reprezentari consecutive.\n'
-            '3. Daca doriti rotirea camerei, apasati pe butonul din coltul din dreapta, sus.\n'
-            '4. Apasati butonul Start Translation pentru a incepe procesul de translatarea\n'
-            ,
-          ),
+        title: const Text('Usage Instructions'),
+        content: const Text(
+          'Follow the steps below:\n'
+          '1. Use the camera to capture the signs.\n'
+          '2. Perform the signs as clearly as possible and allow at least one second between consecutive representations.\n'
+          '3. If you want to rotate the camera, press the button in the top right corner.\n'
+          '4. Press the Start Translation button to begin the translation process.\n'
+        ),
           actions: <Widget>[
             TextButton(
               onPressed: () { Navigator.of(context).pop(); }, // inchid dialogul
