@@ -6,7 +6,9 @@ import transformers
 from huggingface_hub import login
 from PIL import Image
 import cv2
-
+import mediapipe as mp
+from mediapipe.tasks import python
+from mediapipe.tasks.python import vision
 
 
 def call_huggingface_model(prompt):
@@ -26,6 +28,28 @@ def classify_image(image_opencv):
     result = pipe(image)
     return result
 
+
+#def print_result(result: vision.GestureRecognizerResult, output_image: mp.Image, timestamp_ms: int):
+    #print('gesture recognition result: {}'.format(result))
+
+#options = vision.GestureRecognizerOptions(
+   # base_options=python.BaseOptions(model_asset_path='gesture_recognizer.task'),
+   # running_mode=python.VisionRunningMode.LIVE_STREAM,
+   # result_callback=print_result)
+
+base_options = python.BaseOptions(model_asset_path='./AI/gesture_recognizer.task')
+options = vision.GestureRecognizerOptions(base_options=base_options)
+recognizer = vision.GestureRecognizer.create_from_options(options)
+def classify_image(image_opencv):
+    image = Image.fromarray(cv2.cvtColor(image_opencv, cv2.COLOR_BGR2RGB))
+    recognition_result = recognizer.recognize(image)
+
+    print(recognition_result.gestures)
+    print(recognition_result.hand_landmarks)
+    #top_gesture = recognition_result.gestures[0][0]
+    #hand_landmarks = recognition_result.hand_landmarks
+    
+
 if __name__ == '__main__':
     cap = cv2.VideoCapture(0)
     w, h = 360, 240
@@ -35,5 +59,5 @@ if __name__ == '__main__':
         cv2.imshow("Camera",img)
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
-        print(classify_image(img))
+        #print(classify_image(img))
 
