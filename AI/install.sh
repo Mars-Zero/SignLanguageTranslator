@@ -1,8 +1,10 @@
 python3 -m venv .venv
 source ./.venv/bin/activate
 
-pip install transformers[rag]
-pip install tqdm
+pip install openai
+pip install tensorflow==2.2.0
+pip install transformers==3.3.1s
+#pip install transformers
 pip install random
 pip install pandas
 

@@ -1,16 +1,21 @@
-# This is a sample Python script.
-
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
-
-
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
+import openai
+import json
+from openai import OpenAI
+import requests
+import transformers
+from huggingface_hub import login
 
 
-# Press the green button in the gutter to run the script.
+def call_huggingface_model(prompt):
+    login(token="")
+    messages = [
+        {"role": "user", "content": "Who are you?"},
+    ]
+    pipe = transformers.pipeline("text-generation", model="mistralai/Mistral-7B-Instruct-v0.3")
+    response = pipe(messages)
+    return response
+
+
 if __name__ == '__main__':
-    print_hi('PyCharm')
+    print(call_huggingface_model("Hi, my name is"))
 
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
