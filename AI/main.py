@@ -41,8 +41,8 @@ base_options = python.BaseOptions(model_asset_path='./AI/gesture_recognizer.task
 options = vision.GestureRecognizerOptions(base_options=base_options)
 recognizer = vision.GestureRecognizer.create_from_options(options)
 def classify_image(image_opencv):
-    image = Image.fromarray(cv2.cvtColor(image_opencv, cv2.COLOR_BGR2RGB))
-    recognition_result = recognizer.recognize(image)
+    mp_image = mp.Image(image_format=mp.ImageFormat.SRGB, data=image_opencv)
+    recognition_result = recognizer.recognize(mp_image)
 
     print(recognition_result.gestures)
     print(recognition_result.hand_landmarks)
@@ -59,5 +59,5 @@ if __name__ == '__main__':
         cv2.imshow("Camera",img)
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
-        #print(classify_image(img))
+        print(classify_image(img))
 
