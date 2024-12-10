@@ -14,7 +14,7 @@ from mediapipe.tasks.python import vision
 def call_huggingface_model(prompt):
     login(token="")
     messages = [
-        {"role": "user", "content": "Who are you?"},
+        {"role": "user", "content": "You are an AI model that corrects errors in writing. Please correct the following input "+prompt},
     ]
     pipe = transformers.pipeline("text-generation", model="mistralai/Mistral-Nemo-Base-2407")   
     response = pipe(messages)
@@ -23,21 +23,12 @@ def call_huggingface_model(prompt):
 def classify_image(image_opencv):
     login(token="")
     pipe = transformers.pipeline("image-classification", model="RavenOnur/Sign-Language")
-    #image = Image.open(image_path)
     image = Image.fromarray(cv2.cvtColor(image_opencv, cv2.COLOR_BGR2RGB))
     result = pipe(image)
     return result
 
 
-#def print_result(result: vision.GestureRecognizerResult, output_image: mp.Image, timestamp_ms: int):
-    #print('gesture recognition result: {}'.format(result))
-
-#options = vision.GestureRecognizerOptions(
-   # base_options=python.BaseOptions(model_asset_path='gesture_recognizer.task'),
-   # running_mode=python.VisionRunningMode.LIVE_STREAM,
-   # result_callback=print_result)
-
-base_options = python.BaseOptions(model_asset_path='./AI/gesture_recognizer.task')
+base_options = python.BaseOptions(model_asset_path='./AI/training/training/gesture_recognizer_trained_large_dataset.task')
 options = vision.GestureRecognizerOptions(base_options=base_options)
 recognizer = vision.GestureRecognizer.create_from_options(options)
 def classify_image(image_opencv):
@@ -46,7 +37,9 @@ def classify_image(image_opencv):
 
     print(recognition_result.gestures)
     print(recognition_result.hand_landmarks)
-    #top_gesture = recognition_result.gestures[0][0]
+
+    top_gesture = recognition_result.gestures[0][0]
+    return top_gesture
     #hand_landmarks = recognition_result.hand_landmarks
     
 
