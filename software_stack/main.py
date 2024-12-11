@@ -14,7 +14,17 @@ def check_filename(filename):
 
 @app.route('/')
 def home():
-    return "Serverul Flask merge, merge!"
+    return "Serverul Flask good, good!"
+
+# adaug si o ruta de reset, cu rol de a sterge toate fisierele din folderul uploads
+# va fi folosita de fiecare data cand apas din aplicatia flutter pe butonul Start Translation, pentru
+# a incepe o noua sesiune de translare a imaginilor de catre modelul AI.
+@app.route('/reset', methods=['POST'])
+def reset_uploads():
+    for filename in os.listdir(UPLOAD_FOLDER):
+        file_path = os.path.join(UPLOAD_FOLDER, filename)
+        os.remove(file_path)
+    return "Uploads folder had been reseted!", 200
 
 @app.route('/upload', methods=['POST'])
 def upload_file():
@@ -38,7 +48,6 @@ def upload_file():
         # concatenez cu un contor pentru ca altfel, imi punea pozele
         # distincte ca acelasi obiect file in folder.
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-        print(f"File saved: {os.path.join(app.config['UPLOAD_FOLDER'], filename)}")  # Debugging
         return jsonify({'message': 'File uploaded successfully!'}), 200
     else:
         return jsonify({'error': 'File type not allowed'}), 400
