@@ -8,7 +8,7 @@ UPLOAD_FOLDER = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'upload
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['ALLOWED_EXTENSIONS'] = ['jpg', 'png', 'jpeg']
 
-# Funcție pentru a verifica dacă fișierul are extensia corectă
+# functie pentru a verifica extensia fisierului
 def check_filename(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
 
