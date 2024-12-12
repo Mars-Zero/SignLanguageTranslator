@@ -177,12 +177,12 @@ class CameraState extends State<Camera> {
 
   void stopTranslationAndSendToLLM() {
     _timer?.cancel(); // Opreesc trimiterea imaginilor
-    // Trimit output-urile salvate la serverul LLM
+    // Trimit output-urile salvate spre procesarea cu modelul AI.
     sendOutputsToLLM();
   }
 
   Future<void> sendOutputsToLLM() async {
-    final url = Uri.parse('http://192.168.1.128:5000/procesing_translate');
+    final url = Uri.parse('http://192.168.1.128:5000/processing_translate');
 
     try {
       var response = await http.post(
