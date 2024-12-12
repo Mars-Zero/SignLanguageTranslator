@@ -51,6 +51,13 @@ class _CameraPageState extends State<CameraPage> {
                   },
                   child: const Text('Help'),
                 ),
+                ElevatedButton(
+                  onPressed: () {
+                    // pentru a apela functie de oprire a transmiterii datelor si care va chema modelul AI.
+                    _cameraKey.currentState?.stopTranslationAndSendToLLM();
+                  },
+                  child: const Text('Stop'),
+                ),
               ],
             ),
             const Text(
