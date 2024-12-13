@@ -6,11 +6,11 @@ import cv2
 
 # adaug directorul parinte in calea de cautare a modulului, pentru a putea importa
 # PARTEA COMENTATA MOMENTAN NU FUNCTIONEAZA
-# current_dir = os.path.dirname(os.path.abspath(__file__))
-# parent_dir = os.path.dirname(current_dir)
-# if parent_dir not in sys.path:
-#     sys.path.insert(0, parent_dir)
-# from AI.main import classify_image_huggingface, classify_image_mediapipe
+current_dir = os.path.dirname(os.path.abspath(__file__))
+parent_dir = os.path.dirname(current_dir)
+if parent_dir not in sys.path:
+    sys.path.insert(0, parent_dir)
+from AI.main import classify_image
 app = Flask(__name__)
 # setez directorul in care voi incarca pozele primite de camera din aplicatia flutter.
 UPLOAD_FOLDER = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'uploads')
@@ -62,16 +62,16 @@ def upload_file():
     else:
         return jsonify({'error': 'File type not allowed'}), 400
 
-
 # testata si ea cu postman.
 # Ruta de procesare a imaginii, se asteapta sa primeasca o cerere de genul:
 # {
-#   "filename": "e28aaff68a034674b73bf9e945e2b5381.jpg"
+#   "filename": "image_name.jpg"
 # }
 
 # si rapsunsul corect ar fi fe genul:
 # {
-#     "filename": "e28aaff68a034674b73bf9e945e2b5381.jpg",
+#     "filename": "image_name.jpg",
+#     "result_llm": [],
 #     "message": "Image processed successfully"
 # }
 @app.route('/processing_translate', methods=['POST'])
@@ -91,16 +91,14 @@ def procesing_translate():
     if image_opencv is None:
         return jsonify({'error': 'Could not read the image'}), 400
 
-    # NU MERGE SA LE IMPORT.
     # result_huggingface = classify_image_huggingface(image_opencv)
-    # result_mediapipe = classify_image_mediapipe(image_opencv)
-
-    # Poți returna un rezultat procesat
+    # apelez functia din main.py de la llm.
+    result_llm = classify_image(image_opencv)
     return jsonify({
         'message': 'Image processed successfully',
         'filename': filename,
-        # 'huggingface_result': result_huggingface,
-        # 'mediapipe_result': result_mediapipe
+        'result_llm': result_llm
+        # 'huggingface_result': result_huggingface
     }), 200
 
 if __name__ == '__main__':
