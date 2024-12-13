@@ -8,4 +8,5 @@ pip install transformers==3.3.1s
 #pip install transformers
 pip install random
 pip install pandas
+pip install python-dotenv
 
