@@ -6,7 +6,11 @@ from mediapipe_model_maker import gesture_recognizer
 
 import matplotlib.pyplot as plt
 
-dataset_path = "rps_data_sample"
+### This script can be used to further train the model.
+### A similar ipnyb notebook can be found in the training directory and can be used to also train the model using cloud services like Google Colab.
+
+
+dataset_path = "./training/asl/"
 print(dataset_path)
 labels = []
 for i in os.listdir(dataset_path):
