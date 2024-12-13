@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:sign_language_translator/camera.dart';
-import 'package:sign_language_translator/instructions_pop_up.dart';
+import 'package:sign_language_translator/components/camera.dart';
+import 'package:sign_language_translator/components/instructions_pop_up.dart';
 
 class CameraPage extends StatefulWidget {
   const CameraPage({
@@ -51,40 +51,34 @@ class _CameraPageState extends State<CameraPage> {
                       _isTranslating = !_isTranslating;
                     });
                   },
-                  child: Text(_isTranslating
-                      ? 'Stop Translation'
-                      : 'Start Translation'),
+                  child: Text(
+                      _isTranslating ? 'Stop Translation' : 'Start Translation'),
                 ),
                 const SizedBox(width: 20),
                 ElevatedButton(
                   onPressed: () {
-                    showInstructionsDialog(context);
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return InstructionsPopUp();
+                      },
+                    );
                   },
                   child: const Text('Help'),
                 ),
               ],
             ),
-            Container(
-              child: const Text(
-                'Sign Language Translator',
-                style: TextStyle(
-                  color: Colors.deepPurple,
-                  fontSize: 20,
-                ),
+            const Text(
+              'Sign Language Translator',
+              style: TextStyle(
+                color: Colors.deepPurple,
+                fontSize: 20,
               ),
             ),
+            const SizedBox(height: 20),
           ],
         ),
       ),
-    );
-  }
-
-  void showInstructionsDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return InstructionsPopUp();
-      },
     );
   }
 }
