@@ -2,9 +2,9 @@ import 'dart:async'; //pentru a folosi Timer-ul
 import 'dart:typed_data'; //pentru a manipula fișierele în format de bytes
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart'
-    as http; //pachetul http pentru a trimite cereri
+import 'package:http/http.dart' as http; //pachetul http pentru a trimite cereri
 import 'dart:convert'; // pentru json
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class Camera extends StatefulWidget {
   const Camera({super.key});
@@ -148,7 +148,8 @@ class CameraState extends State<Camera> {
 
   List<String> translationOutputs = []; // lista pentru a pastra outputurile.
   Future<void> sendImageToServer(Uint8List imageBytes) async {
-    final url = Uri.parse('http://192.168.1.128:5000/upload');
+    final baseUrl = dotenv.env['API_BASE_URL'];
+    final url = Uri.parse('$baseUrl/upload');
 
     try {
       // Verific daca imaginea a fost capturata, prin afisarea dimensiunii la consola.
@@ -176,13 +177,14 @@ class CameraState extends State<Camera> {
   }
 
   void stopTranslationAndSendToLLM() {
-    _timer?.cancel(); // Opreesc trimiterea imaginilor
+    _timer?.cancel(); // Opresc trimiterea imaginilor
     // Trimit output-urile salvate spre procesarea cu modelul AI.
     sendOutputsToLLM();
   }
 
   Future<void> sendOutputsToLLM() async {
-    final url = Uri.parse('http://192.168.1.128:5000/processing_translate');
+    final baseUrl = dotenv.env['API_BASE_URL'];
+    final url = Uri.parse('$baseUrl/processing_translate');
 
     try {
       var response = await http.post(
