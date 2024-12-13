@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:sign_language_translator/camera.dart';
+import 'package:sign_language_translator/instructions_pop_up.dart';
 
 class CameraPage extends StatefulWidget {
   const CameraPage({
-    super.key
-    });
+    super.key,
+  });
 
   @override
   State<CameraPage> createState() => _CameraPageState();
@@ -12,6 +13,7 @@ class CameraPage extends StatefulWidget {
 
 class _CameraPageState extends State<CameraPage> {
   final GlobalKey<CameraState> _cameraKey = GlobalKey<CameraState>();
+  bool _isTranslating = false;
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +34,7 @@ class _CameraPageState extends State<CameraPage> {
             const SizedBox(height: 2),
             Container(
               constraints: const BoxConstraints(maxHeight: 400),
-              child: Camera(key: _cameraKey), // ma folosesc de key pt a accesa metodele clasei Camera.
+              child: Camera(key: _cameraKey),
             ),
             const SizedBox(height: 110),
             Row(
@@ -40,9 +42,18 @@ class _CameraPageState extends State<CameraPage> {
               children: [
                 ElevatedButton(
                   onPressed: () {
-                    _cameraKey.currentState?.startOrResetTranslation();
+                    setState(() {
+                      if (_isTranslating) {
+                        _cameraKey.currentState?.stopTranslationAndSendToLLM();
+                      } else {
+                        _cameraKey.currentState?.startOrResetTranslation();
+                      }
+                      _isTranslating = !_isTranslating;
+                    });
                   },
-                  child: const Text('Start Translation'),
+                  child: Text(_isTranslating
+                      ? 'Stop Translation'
+                      : 'Start Translation'),
                 ),
                 const SizedBox(width: 20),
                 ElevatedButton(
@@ -51,23 +62,17 @@ class _CameraPageState extends State<CameraPage> {
                   },
                   child: const Text('Help'),
                 ),
-                ElevatedButton(
-                  onPressed: () {
-                    // pentru a apela functie de oprire a transmiterii datelor si care va chema modelul AI.
-                    _cameraKey.currentState?.stopTranslationAndSendToLLM();
-                  },
-                  child: const Text('Stop'),
-                ),
               ],
             ),
-            const Text(
-              'Sign Language Translator',
-              style: TextStyle(
-                color: Colors.deepPurple,
-                fontSize: 20,
+            Container(
+              child: const Text(
+                'Sign Language Translator',
+                style: TextStyle(
+                  color: Colors.deepPurple,
+                  fontSize: 20,
+                ),
               ),
             ),
-            const SizedBox(height: 20),
           ],
         ),
       ),
@@ -78,22 +83,7 @@ class _CameraPageState extends State<CameraPage> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Usage Instructions'),
-          content: const Text('Follow the steps below:\n'
-              '1. Use the camera to capture the signs.\n'
-              '2. Perform the signs as clearly as possible and allow at least one second between consecutive representations.\n'
-              '3. If you want to rotate the camera, press the button in the top right corner.\n'
-              '4. Press the Start Translation button to begin the translation process.\n'),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text('Close'),
-            ),
-          ],
-        );
+        return InstructionsPopUp();
       },
     );
   }
