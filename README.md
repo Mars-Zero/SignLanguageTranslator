@@ -1,2 +1,4 @@
-# IA4-literate-winner
+# IA4 Project-> Real-Time Sign Language Translator
+
+
 Applied informatics project
