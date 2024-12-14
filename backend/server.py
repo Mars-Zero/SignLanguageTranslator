@@ -1,3 +1,4 @@
+from AI.main import call_openai_model, classify_image
 import os
 import sys
 from flask import Flask, request, jsonify
@@ -18,11 +19,6 @@ app.config['ALLOWED_EXTENSIONS'] = ['jpg', 'png', 'jpeg']
 def check_filename(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
 
-def reset_uploads():
-    for filename in os.listdir(UPLOAD_FOLDER):
-        file_path = os.path.join(UPLOAD_FOLDER, filename)
-        os.remove(file_path)
-    
 
 @app.route('/upload', methods=['POST'])
 def upload_file():
@@ -60,29 +56,25 @@ def upload_file():
 #     "result_llm": [],
 #     "message": "Image processed successfully"
 # }
-@app.route('/processing_translate', methods=['GET'])
-def procesing_translate():
-    data = request.json
-    if not data or 'filename' not in data:
-        return jsonify({'error': 'No filename provided'}), 400
+@app.route('/translate', methods=['GET'])
+def translate():
+    all_translations = []
+    for filename in os.listdir(UPLOAD_FOLDER):
+        file_path = os.path.join(UPLOAD_FOLDER, filename)
+        image_opencv = cv2.imread(file_path)
+        if image_opencv is None:
+            return jsonify({'error': f'Could not read image: {filename}'}), 400
+        
+        translation_result = classify_image(image_opencv)
+        all_translations.append(translation_result)
 
-    filename = data['filename']
-    file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        os.remove(file_path)
+        
+    translation_string = ' '.join(all_translations)
+    final_translation = call_openai_model(translation_string)
 
-    if not os.path.exists(file_path):
-        return jsonify({'error': 'File not found'}), 404
-
-    image_opencv = cv2.imread(file_path)
-    if image_opencv is None:
-        return jsonify({'error': 'Could not read the image'}), 400
-
-    # result_huggingface = classify_image_huggingface(image_opencv)
-    result_llm = classify_image(image_opencv)
     return jsonify({
-        'message': 'Image processed successfully',
-        'filename': filename,
-        'result_llm': result_llm
-        # 'huggingface_result': result_huggingface
+        'translation': final_translation.content
     }), 200
 
 if __name__ == '__main__':
