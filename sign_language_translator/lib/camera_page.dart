@@ -47,9 +47,9 @@ class _CameraPageState extends State<CameraPage> {
                         setState(() {
                           if (_isTranslating) {
                             _cameraKey.currentState
-                                ?.stopTranslationAndSendToLLM();
+                                ?.stopAndGetTranslation();
                           } else {
-                            _cameraKey.currentState?.startOrResetTranslation();
+                            _cameraKey.currentState?.startTakingPictures();
                           }
                           _isTranslating = !_isTranslating;
                         });

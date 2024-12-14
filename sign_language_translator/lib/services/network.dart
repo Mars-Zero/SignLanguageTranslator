@@ -31,22 +31,23 @@ class Network {
     }
   }
 
-  Future<void> sendOutputsToLLM(List<String> translationOutputs) async {
-    final url = Uri.parse('$_baseUrl/processing_translate');
+  Future<String> getTranslation() async {
+    final url = Uri.parse('$_baseUrl/translate');
 
     try {
-      var response = await http.post(
+      var response = await http.get(
         url,
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({'translations': translationOutputs}),
       );
 
       if (response.statusCode == 200) {
-        print('Procesarea a fost incheiata cu succes!');
-        print('answer from LLM: ${response.body}');
+        final responseBody = jsonDecode(response.body);
+        print('Translation: ${responseBody['translation']}');
+        return responseBody['translation'];
       }
     } catch (e) {
       print('Eroare: $e');
+      return "Error transalting your message";
     }
+    return "";
   }
 }

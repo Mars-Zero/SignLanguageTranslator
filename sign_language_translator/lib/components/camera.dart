@@ -1,4 +1,4 @@
-import 'dart:async'; //pentru a folosi Timer-ul
+import 'dart:async'; // pentru a folosi Timer-ul
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:sign_language_translator/services/network.dart';
@@ -15,6 +15,7 @@ class CameraState extends State<Camera> {
   late CameraController cameraController;
   bool isRearCamera = true;
   Timer? _timer; // Timer pentru trimiterea imaginilor
+  bool _isTranslationActive = false; // Flag pentru a controla procesul de traducere
 
   // Initialize Network instance
   final Network network = Network();
@@ -123,11 +124,11 @@ class CameraState extends State<Camera> {
   }
 
   void _startSendingImages() {
-    _timer?.cancel(); // oprirea timer-ului existent
-    // executa o functie anonimă la fiecare 500 ms, adica aceea in care preiau poza, o citesc ca pe o lista de biti
-    // cu .readAsBytes(), apoi execut functia in care trimit imaginea la server.
+    _isTranslationActive = true;
+    _timer?.cancel(); // Oprire timer existent
     _timer = Timer.periodic(const Duration(milliseconds: 500), (timer) async {
-      if (cameraController.value.isInitialized &&
+      if (_isTranslationActive &&
+          cameraController.value.isInitialized &&
           !cameraController.value.isTakingPicture) {
         try {
           final image = await cameraController.takePicture();
@@ -140,13 +141,18 @@ class CameraState extends State<Camera> {
     });
   }
 
-  void startOrResetTranslation() {
+  void startTakingPictures() {
     _startSendingImages();
   }
 
-  void stopTranslationAndSendToLLM() {
-    _timer?.cancel();
-    network.sendOutputsToLLM(translationOutputs);
+  Future<String> stopAndGetTranslation() async {
+    _isTranslationActive = false;
+    _timer?.cancel(); // Oprire timer
+
+    // asigura ca se opreste upload-ul
+    await Future.delayed(const Duration(milliseconds: 50));
+
+    return network.getTranslation();
   }
 
   List<String> translationOutputs = [];
