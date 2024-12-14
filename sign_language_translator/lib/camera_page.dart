@@ -37,45 +37,57 @@ class _CameraPageState extends State<CameraPage> {
               child: Camera(key: _cameraKey),
             ),
             const SizedBox(height: 110),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+            Column(
               children: [
-                ElevatedButton(
-                  onPressed: () {
-                    setState(() {
-                      if (_isTranslating) {
-                        _cameraKey.currentState?.stopTranslationAndSendToLLM();
-                      } else {
-                        _cameraKey.currentState?.startOrResetTranslation();
-                      }
-                      _isTranslating = !_isTranslating;
-                    });
-                  },
-                  child: Text(
-                      _isTranslating ? 'Stop Translation' : 'Start Translation'),
-                ),
-                const SizedBox(width: 20),
-                ElevatedButton(
-                  onPressed: () {
-                    showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return InstructionsPopUp();
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    ElevatedButton(
+                      onPressed: () {
+                        setState(() {
+                          if (_isTranslating) {
+                            _cameraKey.currentState
+                                ?.stopTranslationAndSendToLLM();
+                          } else {
+                            _cameraKey.currentState?.startOrResetTranslation();
+                          }
+                          _isTranslating = !_isTranslating;
+                        });
                       },
-                    );
-                  },
-                  child: const Text('Help'),
+                      child: Text(_isTranslating
+                          ? 'Stop Translation'
+                          : 'Start Translation'),
+                    ),
+                    const SizedBox(width: 20),
+                    ElevatedButton(
+                      onPressed: () {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return InstructionsPopUp();
+                          },
+                        );
+                      },
+                      child: const Text('Help'),
+                    ),
+                  ],
+                ),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  height: 92,
+                  alignment: Alignment.center,
+                  child: const Text(
+                    'Sign Language Translator',
+                    style: TextStyle(
+                      color: Colors.deepPurple,
+                      fontSize: 20,
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 3,
+                  ),
                 ),
               ],
             ),
-            const Text(
-              'Sign Language Translator',
-              style: TextStyle(
-                color: Colors.deepPurple,
-                fontSize: 20,
-              ),
-            ),
-            const SizedBox(height: 20),
           ],
         ),
       ),
