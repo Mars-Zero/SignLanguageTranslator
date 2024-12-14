@@ -1,9 +1,19 @@
-from AI.main import call_openai_model, classify_image
 import os
 import sys
 from flask import Flask, request, jsonify
 import uuid
 import cv2
+
+import importlib.util
+import sys
+from pathlib import Path
+
+module_path = Path(__file__).resolve().parent.parent / 'AI' / 'main.py'
+
+spec = importlib.util.spec_from_file_location("ai", module_path)
+ai = importlib.util.module_from_spec(spec)
+sys.modules["ai"] = ai
+spec.loader.exec_module(ai)
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
 parent_dir = os.path.dirname(current_dir)
@@ -65,16 +75,23 @@ def translate():
         if image_opencv is None:
             return jsonify({'error': f'Could not read image: {filename}'}), 400
         
-        translation_result = classify_image(image_opencv)
-        all_translations.append(translation_result)
+        translation_result = ai.classify_image_huggingface(image_opencv)
+        print(translation_result)
+        
+        # translation_result = ai.classify_image(image_opencv)
+        # if translation_result:
+        #     all_translations.append(translation_result[0][0].category_name)
+        # if translation_result:
+        #     print(translation_result[0][0].category_name)
 
         os.remove(file_path)
         
-    translation_string = ' '.join(all_translations)
-    final_translation = call_openai_model(translation_string)
+    # translation_string = ' '.join(all_translations)
+    # final_translation = ai.call_openai_model(translation_string)
+    # print(final_translation.content)
 
     return jsonify({
-        'translation': final_translation.content
+        # 'translation': final_translation.content
     }), 200
 
 if __name__ == '__main__':
