@@ -4,45 +4,32 @@ from flask import Flask, request, jsonify
 import uuid
 import cv2
 
-# adaug directorul parinte in calea de cautare a modulului, pentru a putea importa
-# PARTEA COMENTATA MOMENTAN NU FUNCTIONEAZA
 current_dir = os.path.dirname(os.path.abspath(__file__))
 parent_dir = os.path.dirname(current_dir)
 if parent_dir not in sys.path:
     sys.path.insert(0, parent_dir)
 from AI.main import classify_image
 app = Flask(__name__)
-# setez directorul in care voi incarca pozele primite de camera din aplicatia flutter.
+
 UPLOAD_FOLDER = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'uploads')
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['ALLOWED_EXTENSIONS'] = ['jpg', 'png', 'jpeg']
 
-# functie pentru a verifica extensia fisierului
 def check_filename(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
 
-@app.route('/')
-def home():
-    return "Serverul Flask good, good!"
-
-# adaug si o ruta de reset, cu rol de a sterge toate fisierele din folderul uploads
-# va fi folosita de fiecare data cand apas din aplicatia flutter pe butonul Start Translation, pentru
-# a incepe o noua sesiune de translare a imaginilor de catre modelul AI.
-@app.route('/reset', methods=['POST'])
 def reset_uploads():
     for filename in os.listdir(UPLOAD_FOLDER):
         file_path = os.path.join(UPLOAD_FOLDER, filename)
         os.remove(file_path)
-    return "Uploads folder had been reseted!", 200
+    
 
-# aceasta ruta merge, e testata cu PostMan, si uploadeaza si file-ul in folder.
 @app.route('/upload', methods=['POST'])
 def upload_file():
     # verific daca in cerere exista un fisier.
     if 'file' not in request.files:
         return jsonify({'error': 'No file part'}), 400
 
-    # preiau FISIERUL din request.
     file = request.files['file']
 
     if file.filename == '': 
@@ -62,7 +49,6 @@ def upload_file():
     else:
         return jsonify({'error': 'File type not allowed'}), 400
 
-# testata si ea cu postman.
 # Ruta de procesare a imaginii, se asteapta sa primeasca o cerere de genul:
 # {
 #   "filename": "image_name.jpg"
@@ -74,7 +60,7 @@ def upload_file():
 #     "result_llm": [],
 #     "message": "Image processed successfully"
 # }
-@app.route('/processing_translate', methods=['POST'])
+@app.route('/processing_translate', methods=['GET'])
 def procesing_translate():
     data = request.json
     if not data or 'filename' not in data:
@@ -86,13 +72,11 @@ def procesing_translate():
     if not os.path.exists(file_path):
         return jsonify({'error': 'File not found'}), 404
 
-    # incarc imaginea si o citesc
     image_opencv = cv2.imread(file_path)
     if image_opencv is None:
         return jsonify({'error': 'Could not read the image'}), 400
 
     # result_huggingface = classify_image_huggingface(image_opencv)
-    # apelez functia din main.py de la llm.
     result_llm = classify_image(image_opencv)
     return jsonify({
         'message': 'Image processed successfully',
