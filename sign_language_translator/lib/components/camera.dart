@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:sign_language_translator/services/network.dart';
 
 class Camera extends StatefulWidget {
-  const Camera({super.key});
+  final Function(String) onTranslationReceived;
+
+  const Camera({super.key, required this.onTranslationReceived});
 
   @override
   State<Camera> createState() => CameraState();
@@ -152,8 +154,10 @@ class CameraState extends State<Camera> {
     // asigura ca se opreste upload-ul
     await Future.delayed(const Duration(milliseconds: 50));
 
-    return network.getTranslation();
-  }
+    String translation = await network.getTranslation();
 
-  List<String> translationOutputs = [];
+    widget.onTranslationReceived(translation);
+
+    return translation;
+  }
 }

@@ -46,7 +46,7 @@ class Network {
       }
     } catch (e) {
       print('Eroare: $e');
-      return "Error transalting your message";
+      return "Error translating your message";
     }
     return "";
   }
