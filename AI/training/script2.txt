@@ -1,0 +1,13 @@
+# Set the directory where you want to start
+$startDirectory = "C:\Path\To\Your\Directory"
+
+# Get all files recursively
+Get-ChildItem -Path $startDirectory -Recurse -File | ForEach-Object {
+    $filePath = $_.FullName
+    $directory = $_.DirectoryName
+    $newName = "a" + $_.Name  # Add 'a' at the start of the file name (modify as needed)
+    $newPath = Join-Path -Path $directory -ChildPath $newName
+    
+    # Rename the file
+    Rename-Item -Path $filePath -NewName $newPath
+}

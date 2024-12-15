@@ -52,7 +52,7 @@ def classify_image_huggingface(image_opencv):
     return result
 
 
-base_options = python.BaseOptions(model_asset_path='./AI/training/gesture_recognizer_trained_large_dataset.task')
+base_options = python.BaseOptions(model_asset_path='./AI/training/recent_data_gesture_recognizer.task')
 options = vision.GestureRecognizerOptions(base_options=base_options)
 recognizer = vision.GestureRecognizer.create_from_options(options)
 def classify_image(image_opencv):
@@ -62,14 +62,14 @@ def classify_image(image_opencv):
     
 
 if __name__ == '__main__':
-    print(call_openai_model("HHhhhhheeeelllllloooooo"))
-    # cap = cv2.VideoCapture(0)
-    # w, h = 360, 240
-    # while True:
-    #     _, img = cap.read()
-    #     img = cv2.resize(img, (w,h))
-    #     cv2.imshow("Camera",img)
-    #     if cv2.waitKey(1) & 0xFF == ord('q'):
-    #         break
-    #     print(classify_image(img))
+    # print(call_openai_model("HHhhhhheeeelllllloooooo"))
+    cap = cv2.VideoCapture(0)
+    w, h = 360, 240
+    while True:
+        _, img = cap.read()
+        img = cv2.resize(img, (w,h))
+        cv2.imshow("Camera",img)
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            break
+        print(classify_image(img))
 

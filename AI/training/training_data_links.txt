@@ -1,2 +1,8 @@
+training data (curated):
+
+
+
+sources:
 https://www.cvssp.org/FingerSpellingKinect2011/fingerspelling5.tar.bz2
 https://www.cvssp.org/FingerSpellingKinect2011/dataset9-depth.tar.gz
+https://www.kaggle.com/datasets/grassknoted/asl-alphabet/data
