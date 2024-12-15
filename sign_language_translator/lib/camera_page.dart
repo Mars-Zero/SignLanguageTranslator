@@ -3,9 +3,7 @@ import 'package:sign_language_translator/components/camera.dart';
 import 'package:sign_language_translator/components/instructions_pop_up.dart';
 
 class CameraPage extends StatefulWidget {
-  const CameraPage({
-    super.key,
-  });
+  const CameraPage({super.key});
 
   @override
   State<CameraPage> createState() => _CameraPageState();
@@ -14,6 +12,13 @@ class CameraPage extends StatefulWidget {
 class _CameraPageState extends State<CameraPage> {
   final GlobalKey<CameraState> _cameraKey = GlobalKey<CameraState>();
   bool _isTranslating = false;
+  String _translation = '';
+
+  void _updateTranslation(String translation) {
+    setState(() {
+      _translation = translation;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +39,10 @@ class _CameraPageState extends State<CameraPage> {
             const SizedBox(height: 2),
             Container(
               constraints: const BoxConstraints(maxHeight: 400),
-              child: Camera(key: _cameraKey),
+              child: Camera(
+                key: _cameraKey,
+                onTranslationReceived: _updateTranslation,
+              ),
             ),
             const SizedBox(height: 110),
             Column(
@@ -46,8 +54,7 @@ class _CameraPageState extends State<CameraPage> {
                       onPressed: () {
                         setState(() {
                           if (_isTranslating) {
-                            _cameraKey.currentState
-                                ?.stopAndGetTranslation();
+                            _cameraKey.currentState?.stopAndGetTranslation();
                           } else {
                             _cameraKey.currentState?.startTakingPictures();
                           }
@@ -76,9 +83,9 @@ class _CameraPageState extends State<CameraPage> {
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   height: 92,
                   alignment: Alignment.center,
-                  child: const Text(
-                    'Sign Language Translator',
-                    style: TextStyle(
+                  child: Text(
+                    _translation.isEmpty ? 'No translation' : _translation,
+                    style: const TextStyle(
                       color: Colors.deepPurple,
                       fontSize: 20,
                     ),
