@@ -52,7 +52,7 @@ def classify_image_huggingface(image_opencv):
     return result
 
 
-base_options = python.BaseOptions(model_asset_path='./AI/training/gesture_recognizer_trained_large_dataset.task')
+base_options = python.BaseOptions(model_asset_path='../AI/training/gesture_recognizer_trained_large_dataset.task')
 options = vision.GestureRecognizerOptions(base_options=base_options)
 recognizer = vision.GestureRecognizer.create_from_options(options)
 def classify_image(image_opencv):
