@@ -31,35 +31,35 @@ def check_filename(filename):
 @app.route('/upload', methods=['POST'])
 def upload_file():
     global cod_counter
-    # verific daca in cerere exista un fisier.
+    # Check if a file is present in the request.
     if 'file' not in request.files:
         return jsonify({'error': 'No file part'}), 400
 
     file = request.files['file']
 
     if file.filename == '': 
-        # in caz ca am un fisier gol:
+        # In case we have an empty file.
         return jsonify({'error': 'No selected file'}), 400
 
     if file and check_filename(file.filename):
-        # am creat un hash unic pe care sa il apenduiesc in fata numelui fisierului, pentru
-        # ca daca il lasam fara, fisierele nu mai aveau denumiri distincte, si folderul
-        # ramanea mereu doar cu o poza, la fiecare incarcare a camerei din flutter.
+        # Append the cod_counter to the filename because without it,
+        # files wouldn't have distinct names, and the folder would
+        # always have only one image with each camera upload from Flutter.
         filename = f"{cod_counter}_{file.filename}"
-        # concatenez cu un contor pentru ca altfel, imi punea pozele
-        # distincte ca acelasi obiect file in folder.
+        # Concatenate with a counter because otherwise, it would place
+        # different images as the same file object in the folder.
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
         cod_counter += 1
         return jsonify({'message': 'File uploaded successfully!'}), 200
     else:
         return jsonify({'error': 'File type not allowed'}), 400
 
-# Ruta de procesare a imaginii, se asteapta sa primeasca o cerere de genul:
+# Image processing route, expecting to receive a request like:
 # {
 #   "filename": "image_name.jpg"
 # }
 
-# si rapsunsul corect ar fi fe genul:
+# And the correct response would be something like:
 # {
 #     "filename": "image_name.jpg",
 #     "result_llm": [],
