@@ -75,23 +75,23 @@ def translate():
         if image_opencv is None:
             return jsonify({'error': f'Could not read image: {filename}'}), 400
         
-        translation_result = ai.classify_image_huggingface(image_opencv)
-        print(translation_result)
+        # translation_result = ai.classify_image_huggingface(image_opencv)
+        # print(translation_result)
         
-        # translation_result = ai.classify_image(image_opencv)
-        # if translation_result:
-        #     all_translations.append(translation_result[0][0].category_name)
-        # if translation_result:
-        #     print(translation_result[0][0].category_name)
+        translation_result = ai.classify_image(image_opencv)
+        if translation_result:
+            all_translations.append(translation_result[0][0].category_name)
+        if translation_result:
+            print(translation_result[0][0].category_name)
 
         os.remove(file_path)
         
-    # translation_string = ' '.join(all_translations)
-    # final_translation = ai.call_openai_model(translation_string)
-    # print(final_translation.content)
+    translation_string = ''.join(all_translations)
+    final_translation = ai.call_openai_model(translation_string)
+    print(final_translation.content)
 
     return jsonify({
-        # 'translation': final_translation.content
+        'translation': final_translation.content
     }), 200
 
 if __name__ == '__main__':
