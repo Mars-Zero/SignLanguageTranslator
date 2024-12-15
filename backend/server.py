@@ -1,11 +1,8 @@
 import os
 import sys
 from flask import Flask, request, jsonify
-import uuid
 import cv2
-
 import importlib.util
-import sys
 from pathlib import Path
 
 module_path = Path(__file__).resolve().parent.parent / 'AI' / 'main.py'
@@ -26,12 +23,14 @@ UPLOAD_FOLDER = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'upload
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['ALLOWED_EXTENSIONS'] = ['jpg', 'png', 'jpeg']
 
+cod_counter = 1
 def check_filename(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
 
 
 @app.route('/upload', methods=['POST'])
 def upload_file():
+    global cod_counter
     # verific daca in cerere exista un fisier.
     if 'file' not in request.files:
         return jsonify({'error': 'No file part'}), 400
@@ -43,14 +42,14 @@ def upload_file():
         return jsonify({'error': 'No selected file'}), 400
 
     if file and check_filename(file.filename):
-        cod_unic = uuid.uuid4().hex
         # am creat un hash unic pe care sa il apenduiesc in fata numelui fisierului, pentru
         # ca daca il lasam fara, fisierele nu mai aveau denumiri distincte, si folderul
         # ramanea mereu doar cu o poza, la fiecare incarcare a camerei din flutter.
-        filename = f"{cod_unic}{file.filename}"
+        filename = f"{cod_counter}_{file.filename}"
         # concatenez cu un contor pentru ca altfel, imi punea pozele
         # distincte ca acelasi obiect file in folder.
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        cod_counter += 1
         return jsonify({'message': 'File uploaded successfully!'}), 200
     else:
         return jsonify({'error': 'File type not allowed'}), 400
