@@ -38,7 +38,7 @@ flutter run
 ```
 
 ## AI Model
-A Google AI gesture recognition model was used for ASL image recognition. This model was trained on a 2.7GB curated dataset compiled from various Kaggle repositories.
+A Google AI gesture recognition model was used for American Sign Language (ASL) image recognition. This model was trained on a 2.4GB dataset compiled from various Kaggle repositories.
 The model achieves an accuracy of 93.6% and a loss of 0.1563. 
 In practice, the lighting of the environment significantly affects the accuracy of classification because the training data primarily consists of images with good to excellent lighting conditions.
 Other Hugging Face alternatives tested were slower and less accurate overall, based on our evaluations. Additionally, the training data predominantly features right-handed photos, so ASL letter recognition is expected to perform better for right-handed gestures.
@@ -49,6 +49,9 @@ A Mistral alternative was tested but found to be less effective. The OpenAI solu
 
 ## Frontend
 
+- the `sign_language_translator/` directory
+
+### Structure
 ```
 lib/
 ├── main.dart 
@@ -57,6 +60,22 @@ lib/
 │   ├── camera.dart
 │   └── instructions_pop_up.dart
 └── services/
-    └── network.dart
+    └── network.dart   # handles API requests for image upload and translation retrieval.
 ```
+
+### Components
+The app consists of one page with the following components:
+- camera, used to capture the signs that will be translated
+    - button to change the camera in use (rear/frontal camera)
+- button to start/stop the translation
+- button that opens a pop-up with the usage instructions for the app
+- a text component, where the translation will be displayed
+
+
+### Translation Workflow
+1. Open the app.
+2. Tap **Start Translation** to begin.
+3. The app captures images periodically and sends them to the backend for processing.
+4. Tap **Stop Translation** to end the process.
+5. View the translation result displayed on the screen.
 
