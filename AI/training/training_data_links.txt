@@ -1,6 +1,5 @@
 training data (curated):
-
-
+https://drive.google.com/file/d/1ro_FKL4dxrjC1vO8PAKCZgfUiFbPv2iF/view?usp=sharing
 
 sources:
 https://www.cvssp.org/FingerSpellingKinect2011/fingerspelling5.tar.bz2
