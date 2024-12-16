@@ -71,6 +71,16 @@ The app consists of one page with the following components:
 - button that opens a pop-up with the usage instructions for the app
 - a text component, where the translation will be displayed
 
+<img src="readme_images/ss1.jpg" height="450">
+<img src="readme_images/ss2.jpg" height="450">
+
+### Translation Workflow
+1. Open the app.
+2. Tap **Start Translation** to begin.
+3. The app captures images periodically and sends them to the backend for processing.
+4. Tap **Stop Translation** to end the process.
+5. View the translation result displayed on the screen.
+
 ## Backend
 - the `backend/` directory
 A Flask server for processing and classifying images. The server allows users to upload images from the frontend of the app, after which the server processes them using an AI model.
@@ -87,11 +97,3 @@ The server includes the following routes:
 - Iterates through all the files saved in the folder using a classification list, leveraging a function from the AI model to classify each image. The highest-probability prediction (usually the first result) is appended to the list.
 - The results are concatenated and formatted into a string, which is then passed to the `call_openai_model` function from the AI module to generate a translation.
 - Returns the content of the translation in JSON format.
-
-### Translation Workflow
-1. Open the app.
-2. Tap **Start Translation** to begin.
-3. The app captures images periodically and sends them to the backend for processing.
-4. Tap **Stop Translation** to end the process.
-5. View the translation result displayed on the screen.
-
