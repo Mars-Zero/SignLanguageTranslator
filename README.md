@@ -71,6 +71,22 @@ The app consists of one page with the following components:
 - button that opens a pop-up with the usage instructions for the app
 - a text component, where the translation will be displayed
 
+## Backend
+- the `backend/` directory
+A Flask server for processing and classifying images. The server allows users to upload images from the frontend of the app, after which the server processes them using an AI model.
+The server includes the following routes:
+
+### /upload:
+- Method: POST
+- Allows users to upload images for processing. The Flask application is configured with a folder named “uploads”, where the uploaded images are stored. After retrieving the image from the request, the function check_filename is called to verify if the file name matches the desired extensions (.png, .jpg, .jpeg).
+- A counter is appended to the file name, incremented with each upload, ensuring that the images are processed in the order they were sent. The uploaded image is then saved to the folder.
+- Responds with a success message or an error message, depending on the file's validity (existence and correct file name).
+
+### /translate:
+- Method: GET
+- Iterates through all the files saved in the folder using a classification list, leveraging a function from the AI model to classify each image. The highest-probability prediction (usually the first result) is appended to the list.
+- The results are concatenated and formatted into a string, which is then passed to the `call_openai_model` function from the AI module to generate a translation.
+- Returns the content of the translation in JSON format.
 
 ### Translation Workflow
 1. Open the app.
