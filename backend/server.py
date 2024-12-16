@@ -81,7 +81,7 @@ def translate():
         print(filename)
         os.remove(file_path)
 
-    translation_string = "".join(all_translations)
+    translation_string = "".join(" " if item == "space" else item for item in all_translations)
     final_translation = ai.call_openai_model(translation_string)
     print(final_translation.content)
 
